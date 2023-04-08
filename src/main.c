@@ -39,6 +39,39 @@ int map_to_grid_intensity(Reduced_Color color) {
     return intensity_map[small_grey];
 }
 
+void set_grid_color(Grid_Color* grid, Reduced_Color reduced_color, int i, int j, rgb total_average, rgb local_average) {
+    unsigned char average_red = reduced_color.red / reduced_color.number_of_pixels;
+    unsigned char average_green = reduced_color.green / reduced_color.number_of_pixels;
+    unsigned char average_blue = reduced_color.blue / reduced_color.number_of_pixels;
+    grid[i + j * GRID_HEIGHT].red = 2 * average_red > local_average.red + total_average.red;
+    grid[i + j * GRID_HEIGHT].green = 2 * average_green > local_average.green + total_average.green;
+    grid[i + j * GRID_HEIGHT].blue = 2 * average_blue > local_average.blue + total_average.blue;
+    grid[i + j * GRID_HEIGHT].intensity = map_to_grid_intensity(reduced_color);
+}
+
+rgb compute_regional_average(PPM* imagem, int i_start, int j_start, int i_end, int j_end) {
+    Reduced_Color total_average = {0, 0, 0, 0};
+    if (i_start < 0) {
+        i_start = 0;
+    }
+    if (j_start < 0) {
+        j_start = 0;
+    }
+    for (int i = i_start; i < i_end && i < imagem->cabecalho->tamanho->altura; i++) {
+        for (int j = j_start; j < j_end && j < imagem->cabecalho->tamanho->largura; j++) {
+            total_average.red += imagem->pixel[i][j].red;
+            total_average.green += imagem->pixel[i][j].green;
+            total_average.blue += imagem->pixel[i][j].blue;
+            total_average.number_of_pixels++;
+        }
+    }
+    total_average.red /= total_average.number_of_pixels;
+    total_average.green /= total_average.number_of_pixels;
+    total_average.blue /= total_average.number_of_pixels;
+
+    return (rgb){total_average.red, total_average.green, total_average.blue};
+}
+
 Reduced_Color get_grid_color(int i, int j, int image_height, int height_ratio, int image_width, int width_ratio, PPM* imagem) {
     Reduced_Color reduced_color = {0, 0, 0, 0};
 
@@ -60,25 +93,18 @@ Reduced_Color get_grid_color(int i, int j, int image_height, int height_ratio, i
     return reduced_color;
 }
 
-void set_grid_color(Grid_Color* grid, Reduced_Color reduced_color, int i, int j) {
-    unsigned char average_red = reduced_color.red / reduced_color.number_of_pixels;
-    unsigned char average_green = reduced_color.green / reduced_color.number_of_pixels;
-    unsigned char average_blue = reduced_color.blue / reduced_color.number_of_pixels;
-    grid[i + j * GRID_HEIGHT].red = average_red > 51;
-    grid[i + j * GRID_HEIGHT].green = average_green > 51;
-    grid[i + j * GRID_HEIGHT].blue = average_blue > 51;
-    grid[i + j * GRID_HEIGHT].intensity = map_to_grid_intensity(reduced_color);
-}
-
 Grid_Color* grid_image_init(int image_height, int image_width, PPM* imagem) {
     Grid_Color* grid = (Grid_Color*)malloc(sizeof(Grid_Color) * GRID_SIZE);
 
     int height_ratio = image_height / GRID_HEIGHT;
     int width_ratio = image_width / GRID_WIDTH;
+    int square_size = 50;
+    rgb total_average = compute_regional_average(imagem, 0, 0, image_height, image_width);
     for (int i = 0; i < GRID_HEIGHT; i++) {
         for (int j = 0; j < GRID_WIDTH; j++) {
             Reduced_Color reduced_color = get_grid_color(i, j, image_height, height_ratio, image_width, width_ratio, imagem);
-            set_grid_color(grid, reduced_color, i, j);
+            rgb regional_average = compute_regional_average(imagem, i * height_ratio - square_size, j * width_ratio - square_size, i * height_ratio + square_size, j * width_ratio + square_size);
+            set_grid_color(grid, reduced_color, i, j, total_average, regional_average);
         }
     }
     return grid;
@@ -119,7 +145,7 @@ void list_ascii() {
 
 int main(void) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    PPM* imagem = PPM_from_image("images/malenia.jpg");
+    PPM* imagem = PPM_from_image("images/hk.jpg");
     // efeito_aplica_negativo(&imagem);
     int image_height = imagem->cabecalho->tamanho->altura;
     int image_width = imagem->cabecalho->tamanho->largura;
