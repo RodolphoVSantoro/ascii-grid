@@ -119,7 +119,7 @@ void list_ascii() {
 
 int main(void) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    PPM* imagem = PPM_leitura("images/hk.ppm");
+    PPM* imagem = PPM_from_image("images/malenia.jpg");
     // efeito_aplica_negativo(&imagem);
     int image_height = imagem->cabecalho->tamanho->altura;
     int image_width = imagem->cabecalho->tamanho->largura;

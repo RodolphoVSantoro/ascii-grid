@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "interop_rs.h"
+
 FILE *fopen_or_crash(char fname[], char modo[]) {
     FILE *arquivo = fopen(fname, modo);
     if (arquivo == NULL) {
@@ -176,4 +178,20 @@ void efeito_aplica_negativo(PPM **imagem) {
             (*imagem)->pixel[i][j].green = 255 - (*imagem)->pixel[i][j].green;
             (*imagem)->pixel[i][j].blue = 255 - (*imagem)->pixel[i][j].blue;
         }
+}
+
+PPM *PPM_from_image(const char *fname) {
+    Image image = load_image(fname);
+    PPM *imagem = PPM_cria();
+    imagem->cabecalho = PPMHeader_cria(image.height, image.width, 255, Key_PPM);
+    imagem->pixel = rgb2d_malloc(*imagem->cabecalho->tamanho);
+    for (int i = 0; i < imagem->cabecalho->tamanho->altura; i++) {
+        for (int j = 0; j < imagem->cabecalho->tamanho->largura; j++) {
+            imagem->pixel[i][j].red = image.pixels[i][j].red;
+            imagem->pixel[i][j].green = image.pixels[i][j].green;
+            imagem->pixel[i][j].blue = image.pixels[i][j].blue;
+        }
+    }
+    drop_image(image);
+    return imagem;
 }

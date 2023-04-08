@@ -36,4 +36,5 @@ typedef struct PPM PPM;
 PPM *PPM_leitura(const char *fname);
 void PPM_libera(PPM *imagem);
 void efeito_aplica_negativo(PPM **imagem);
+PPM *PPM_from_image(const char *fname);
 #endif
