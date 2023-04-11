@@ -11,4 +11,4 @@ default : $(source)
 	$(compiler) $(flags) $(warn) $(includes) $(source) $(libs) -o $(output)
 
 run: $(output)
-	./$(output)
+	./$(output) $(image) $(invert)

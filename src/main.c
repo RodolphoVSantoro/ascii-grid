@@ -99,7 +99,12 @@ Grid_Color* grid_image_init(int image_height, int image_width, PPM* imagem) {
 
     int height_ratio = image_height / GRID_HEIGHT;
     int width_ratio = image_width / GRID_WIDTH;
-    int square_size = 50;
+    int square_size;
+    if (height_ratio < width_ratio) {
+        square_size = height_ratio * 10;
+    } else {
+        square_size = width_ratio * 10;
+    }
     for (int i = 0; i < GRID_HEIGHT; i++) {
         for (int j = 0; j < GRID_WIDTH; j++) {
             Reduced_Color reduced_color = get_grid_color(i, j, image_height, height_ratio, image_width, width_ratio, imagem);
@@ -143,10 +148,103 @@ void list_ascii() {
     }
 }
 
-int main(void) {
+int getLength(char* str) {
+    int i = 0;
+    while (str[i] != '\0') {
+        i++;
+    }
+    return i;
+}
+
+char* newFrom(char* str) {
+    int string_length = getLength(str);
+    char* newStr = (char*)malloc(sizeof(char) * (string_length + 1));
+    int i;
+    for (i = 0; i < string_length; i++) {
+        newStr[i] = str[i];
+    }
+    newStr[i] = '\0';
+    return newStr;
+}
+
+char* withFolderName(char* folder_name, char* file_name) {
+    int folder_name_length = getLength(folder_name);
+    int file_name_length = getLength(file_name);
+    char* newStr = (char*)malloc(sizeof(char) * (folder_name_length + file_name_length + 2));
+    int i;
+    for (i = 0; i < folder_name_length; i++) {
+        newStr[i] = folder_name[i];
+    }
+    newStr[i] = '/';
+    i++;
+    for (int j = 0; j < file_name_length; j++) {
+        newStr[i] = file_name[j];
+        i++;
+    }
+    newStr[i] = '\0';
+    return newStr;
+}
+
+#ifdef _WIN32
+int main(int argc, char* argv[]) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    PPM* imagem = PPM_from_image("images/war_crimes.jpg");
-    // efeito_aplica_negativo(&imagem);
+    char* image_name = NULL;
+    int chosen_image = 0;
+    if (argc < 2) {
+        HANDLE hFind;
+        WIN32_FIND_DATA FindData;
+        hFind = FindFirstFile("./images/*", &FindData);
+
+        if (hFind == INVALID_HANDLE_VALUE) {
+            printf("Usage: %s <image_name = $path> <invert = 0 | 1> \n", argv[0]);
+            return 1;
+        }
+
+        int nFiles = 1;
+        while (FindNextFile(hFind, &FindData)) {
+            nFiles++;
+        }
+
+        FindClose(hFind);
+
+        hFind = FindFirstFile("./images/*", &FindData);
+        char** images = (char**)malloc(sizeof(char*) * nFiles);
+        for (int i = 0; i < nFiles; i++) {
+            images[i] = withFolderName("./images", FindData.cFileName);
+            printf("%d - %s \n", i + 1, FindData.cFileName);
+            FindNextFile(hFind, &FindData);
+        }
+
+        FindClose(hFind);
+
+        int image_index;
+        printf("Choose one of the images above: ");
+        scanf("%d", &image_index);
+        if (image_index < 1 || image_index > nFiles) {
+            printf("Invalid image index\n");
+            return 1;
+        }
+        image_name = newFrom(images[image_index - 1]);
+        chosen_image = 1;
+        for (int i = 0; i < nFiles; i++) {
+            free(images[i]);
+        }
+        free(images);
+    } else {
+        image_name = argv[1];
+    }
+    int invert = 0;
+    if (argc >= 3) {
+        invert = atoi(argv[2]);
+    }
+    printf("Opening image: %s\n", image_name);
+    PPM* imagem = PPM_from_image(image_name);
+    if (chosen_image) {
+        free(image_name);
+    }
+    if (invert) {
+        efeito_aplica_negativo(&imagem);
+    }
     int image_height = imagem->cabecalho->tamanho->altura;
     int image_width = imagem->cabecalho->tamanho->largura;
 
@@ -158,3 +256,6 @@ int main(void) {
     SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
     return 0;
 }
+#else
+#error "Operational system not supported"
+#endif
