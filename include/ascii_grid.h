@@ -3,10 +3,14 @@
 #include <stdlib.h>
 
 #include "lib_ppm.h"
+
 #ifdef _WIN32
+
 #define GRID_HEIGHT 60
 #define GRID_WIDTH 230
 #define GRID_SIZE (GRID_HEIGHT * GRID_WIDTH)
+
+#include <windows.h>
 
 enum bool {
     false,
