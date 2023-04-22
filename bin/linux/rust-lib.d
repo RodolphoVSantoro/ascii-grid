@@ -1,0 +1,1 @@
+/home/rodolpho/Desktop/projects/ascii-grid/rust-lib/target/release/rust-lib: /home/rodolpho/Desktop/projects/ascii-grid/rust-lib/src/lib.rs /home/rodolpho/Desktop/projects/ascii-grid/rust-lib/src/main.rs

@@ -1,3 +1,4 @@
 *.ppm
 *.exe
 rust-lib/target/*
+.temp.txt
