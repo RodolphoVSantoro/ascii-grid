@@ -5,7 +5,7 @@ ifeq ($(OS), Windows_NT)
     EXECPATH := ./bin/windows
 	output=$(EXECPATH)/ascii_grid.exe
 	RUSTLIB=-lrust_lib.dll
-	RUNCOMMAND=$(EXECPATH)/$(output)
+	RUNCOMMAND=$(output)
 else
     EXECPATH := bin/linux/
 	output=$(EXECPATH)ascii_grid
