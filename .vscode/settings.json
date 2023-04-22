@@ -1,21 +1,31 @@
 {
-    "cSpell.words": [
-        "abrir",
-        "altura",
-        "aplica",
-        "arquivo",
-        "cabecalho",
-        "comentarios",
-        "compara",
-        "cria",
-        "Dimensao",
-        "efeito",
-        "Falha",
-        "imagem",
-        "largura",
-        "leitura",
-        "libera",
-        "negativo",
-        "tipo"
-    ]
+  "cSpell.words": [
+    "abrir",
+    "altura",
+    "aplica",
+    "arquivo",
+    "cabecalho",
+    "comentarios",
+    "compara",
+    "cria",
+    "Dimensao",
+    "efeito",
+    "Falha",
+    "imagem",
+    "largura",
+    "leitura",
+    "libera",
+    "negativo",
+    "tipo"
+  ],
+  "files.associations": {
+    "ascii_grid.h": "c",
+    "char_queue.h": "c",
+    "folder_string.h": "c",
+    "char_double_queue.h": "c",
+    "stdio.h": "c",
+    "stdlib.h": "c",
+    "lib_ppm.h": "c",
+    "interop_rs.h": "c"
+  }
 }
