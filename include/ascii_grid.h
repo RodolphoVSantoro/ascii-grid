@@ -27,8 +27,8 @@ extern const unsigned char intensity_map[4];
 #endif
 
 #ifdef __linux__
-#define GRID_HEIGHT 993
-#define GRID_WIDTH 1400
+#define GRID_HEIGHT 44
+#define GRID_WIDTH 210
 #define GRID_SIZE (GRID_HEIGHT * GRID_WIDTH)
 struct GRID_COLOR {
     int red;
