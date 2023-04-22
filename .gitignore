@@ -2,3 +2,4 @@
 *.exe
 rust-lib/target/*
 .temp.txt
+ascii_grid

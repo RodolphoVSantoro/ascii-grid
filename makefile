@@ -5,10 +5,11 @@ ifeq ($(OS), Windows_NT)
     EXECPATH := ./bin/windows
 	output=$(EXECPATH)/ascii_grid.exe
 	RUSTLIB=-lrust_lib.dll
+	RUNCOMMAND=$(EXECPATH)/$(output)
 else
     EXECPATH := bin/linux/
-	LIBSOPATH := LD_LIBRARY_PATH=$(EXECPATH)
-	output=$(LIBSOPATH) $(EXECPATH)ascii_grid
+	output=$(EXECPATH)ascii_grid
+	RUNCOMMAND=LD_LIBRARY_PATH=$(EXECPATH) ./$(output)
 	RUSTLIB=-lrust_lib
 endif
 
@@ -26,4 +27,4 @@ build_ignore: $(source)
 	$(compiler) $(flags) $(includes) $(source) $(libs) -o $(output)
 
 run: $(output)
-	./$(output) $(image) $(invert)
+	$(RUNCOMMAND) $(image) $(invert)
