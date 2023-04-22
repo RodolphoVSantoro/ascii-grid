@@ -61,3 +61,7 @@ Transform any image into ascii charachters
 ▒▒▒▒▒▒▒▒▒▒▒▒░░░▒█▒░░░▒▒▒▒▓▓▓▓▓▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 
 ▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 
 ░░▒▒▒▒▒▒▒▒▒▒▒░▒▒▒░░░░░░░░░░▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+#Supported OS
+- Linux (with 24 bits colors)
+- Windows (with 3 bits colors + fake 2 bits luminosity)
