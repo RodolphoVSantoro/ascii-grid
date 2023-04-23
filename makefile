@@ -3,13 +3,13 @@ source=./src/main.c ./lib/ascii_grid.c ./lib/lib_ppm.c ./lib/char_queue.c ./lib/
 
 ifeq ($(OS), Windows_NT)
     EXECPATH := ./bin/windows
-	output=$(EXECPATH)/ascii_grid.exe
-	RUSTLIB=-lrust_lib.dll
+	output := $(EXECPATH)/ascii_grid.exe
+	RUSTLIB := -lrust_lib.dll
 else
     EXECPATH := bin/linux/
 	LIBSOPATH := LD_LIBRARY_PATH=$(EXECPATH)
-	output=$(LIBSOPATH) $(EXECPATH)ascii_grid
-	RUSTLIB=-lrust_lib
+	output := $(EXECPATH)ascii_grid
+	RUSTLIB := -lrust_lib
 endif
 
 
@@ -26,4 +26,4 @@ build_ignore: $(source)
 	$(compiler) $(flags) $(includes) $(source) $(libs) -o $(output)
 
 run: $(output)
-	./$(output) $(image) $(invert)
+	$(LIBSOPATH) ./$(output) $(image) $(invert)
