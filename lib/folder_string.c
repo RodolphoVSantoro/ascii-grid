@@ -112,6 +112,8 @@ void parse_args(int argc, char *argv[], char **image_name, int *chose_image, int
     }
 }
 #elif _WIN32
+#include <windows.h>
+#include <tchar.h>
 void parse_args(int argc, char *argv[], char **image_name, int *chose_image, int *should_invert) {
     if (argc < 2) {
         HANDLE hFind;
@@ -120,7 +122,7 @@ void parse_args(int argc, char *argv[], char **image_name, int *chose_image, int
 
         if (hFind == INVALID_HANDLE_VALUE) {
             printf("Usage: %s <image_name = $path> <invert = 0 | 1> \n", argv[0]);
-            return 1;
+            exit(1);
         }
 
         int nFiles = 1;
@@ -145,16 +147,16 @@ void parse_args(int argc, char *argv[], char **image_name, int *chose_image, int
         scanf("%d", &image_index);
         if (image_index < 1 || image_index > nFiles) {
             printf("Invalid image index\n");
-            return 1;
+            exit(1);
         }
-        image_name = newFrom(images[image_index - 1]);
-        chose_image = 1;
+        *image_name = newFrom(images[image_index - 1]);
+        *chose_image = 1;
         for (int i = 0; i < nFiles; i++) {
             free(images[i]);
         }
         free(images);
     } else {
-        image_name = argv[1];
+        *image_name = argv[1];
     }
     *should_invert = 0;
     if (argc >= 3) {
