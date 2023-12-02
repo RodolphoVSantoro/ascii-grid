@@ -151,6 +151,12 @@ void grid_draw(Grid_Color *grid) {
 Grid_Color *grid_image_init(int image_height, int image_width, PPM *imagem) {
     Grid_Color *grid = (Grid_Color *)malloc(sizeof(Grid_Color) * GRID_SIZE);
 
+    if (GRID_HEIGHT > image_height || GRID_WIDTH > image_width) {
+        wprintf(L"Grid size is bigger than image size\n");
+        wprintf(L"Grid height: %d, Image height: %d\n", GRID_HEIGHT, image_height);
+        wprintf(L"upsampling not supported yet\n");
+        exit(1);
+    }
     int height_ratio = image_height / GRID_HEIGHT;
     int width_ratio = image_width / GRID_WIDTH;
     for (int i = 0; i < GRID_HEIGHT; i++) {
